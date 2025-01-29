@@ -1,0 +1,41 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run prisma:generate && npm run prisma:deploy && tsc",
+    "start": "node --conditions=production dist/src/app.js",
+    "dev": "tsx --watch --env-file=.env ./src/app.ts",
+    "prisma": "npx prisma migrate dev",
+    "prisma:deploy": "npx prisma migrate deploy",
+    "prisma:seed": "npx prisma db seed",
+    "prisma:generate": "npx prisma generate",
+    "prisma:reset": "npx prisma migrate reset"
+  },
+  "imports": {
+    "#backend/*": {
+      "production": "./dist/src/*",
+      "default": "./src/*"
+    }
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.2.1",
+    "@trpc/server": "^11.0.0-rc.730",
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.4.0",
+    "@types/express": "^5.0.0",
+    "prisma": "^6.2.1",
+    "tsx": "^4.19.2"
+  }
+}

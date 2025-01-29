@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "customConditions": ["production"],
+    "outDir": "dist"
+  },
+  "include": ["./src/**/*", "./prisma/**/*"],
+  "references": [{ "path": "../shared" }]
+}
