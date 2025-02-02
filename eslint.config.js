@@ -40,8 +40,9 @@ export default [
       ecmaVersion: "latest",
       sourceType: "module",
       globals: {
-        ...globals.browser, // Add browser globals
-        ...globals.node, // Add Node.js globals
+        ...globals.browser,
+        ...globals.node,
+        ...globals.jest,
       },
     },
     plugins: {

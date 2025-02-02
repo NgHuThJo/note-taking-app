@@ -27,7 +27,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^6.2.1",
     "@trpc/server": "^11.0.0-rc.730",
     "cors": "^2.8.5",
     "express": "^4.21.2"
@@ -35,7 +34,6 @@
   "devDependencies": {
     "@faker-js/faker": "^9.4.0",
     "@types/express": "^5.0.0",
-    "prisma": "^6.2.1",
     "tsx": "^4.19.2"
   }
 }
