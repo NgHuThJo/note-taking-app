@@ -3,8 +3,9 @@ import http from "node:http";
 import cors from "cors";
 import express, { ErrorRequestHandler } from "express";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import session from "express-session";
 import { appRouter } from "#backend/routers/api.js";
-import { createContext } from "./routers/trpc.js";
+import { createContext, redisStore } from "./routers/trpc.js";
 import logger from "#backend/utils/logger.js";
 
 // Entry point file
@@ -24,6 +25,19 @@ app.use(
     origin: "*",
     // origin: process.env.PROXY_URL || "http://localhost:5173",
     credentials: true,
+  }),
+);
+app.use(
+  session({
+    store: redisStore,
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.SESSION_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24,
+    },
   }),
 );
 

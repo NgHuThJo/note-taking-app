@@ -1,10 +1,9 @@
 import { ComponentPropsWithoutRef } from "react";
-import { FormError } from "../error/error";
-import { FormErrorMessage } from "#frontend/types";
+import { FormError, FormErrorMessage } from "../message/error";
 import styles from "./label.module.css";
 
 type LabelProps = ComponentPropsWithoutRef<"label"> &
-  FormErrorMessage & {
+  FormError & {
     label?: string;
   };
 
@@ -20,11 +19,7 @@ export function Label({
     <label className={styles[className]} htmlFor={htmlFor} {...restProps}>
       {label}
       {children}
-      {typeof error === "string" ? (
-        <FormError message={error} />
-      ) : (
-        error?.map((message) => <FormError message={message} />)
-      )}
+      <FormErrorMessage error={error} />
     </label>
   );
 }

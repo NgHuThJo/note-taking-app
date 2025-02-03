@@ -1,10 +1,10 @@
 import { ComponentPropsWithRef } from "react";
 import { Label } from "../label/label";
-import { FormErrorMessage } from "#frontend/types";
+import { FormError } from "#frontend/components/ui/form/message/error";
 import styles from "./input.module.css";
 
 type InputProps = ComponentPropsWithRef<"input"> &
-  FormErrorMessage & {
+  FormError & {
     inputClassName?: string;
     label?: string;
     labelClassName?: string;

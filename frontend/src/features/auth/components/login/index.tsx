@@ -1,10 +1,14 @@
 import { useState, FormEvent } from "react";
 import { trpc } from "#frontend/lib/trpc";
 import { Button } from "#frontend/components/ui/button/button";
+import { FormError } from "#frontend/components/ui/form/message/error";
 import { Logo } from "#frontend/components/ui/image/icon/icon";
-import { loginSchema } from "#shared/types/frontend-zod";
+import { loginSchema, SchemaError } from "#shared/types/frontend-zod";
 
 export function Login() {
+  const [fieldErrors, setFieldErrors] = useState<
+    SchemaError<typeof loginSchema>
+  >({});
   const { mutate, isPending, error } = trpc.auth.loginUser.useMutation();
 
   if (isPending) {
@@ -19,8 +23,21 @@ export function Login() {
     event.preventDefault();
 
     const formData = Object.fromEntries(new FormData(event.currentTarget));
+    const parsedSchema = loginSchema.safeParse(formData);
 
-    mutate;
+    if (!parsedSchema.success) {
+      setFieldErrors(parsedSchema.error.flatten().fieldErrors);
+      return;
+    }
+
+    mutate(parsedSchema.data, {
+      onSuccess: () => {
+        setFieldErrors({});
+      },
+      onError: (error) => {
+        console.error(error.message);
+      },
+    });
   };
 
   return (
@@ -41,6 +58,7 @@ export function Login() {
             id="email"
             placeholder="email@example.com"
           />
+          {fieldErrors?.email && <FormError message={fieldErrors.email} />}
         </label>
         <label htmlFor="password">
           Password
