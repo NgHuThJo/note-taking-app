@@ -2,12 +2,5 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {},
   "include": ["./src/**/*"],
-  "references": [
-    {
-      "path": "../backend"
-    },
-    {
-      "path": "../frontend"
-    }
-  ]
+  "references": []
 }

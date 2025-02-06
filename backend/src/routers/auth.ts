@@ -23,4 +23,22 @@ export const authRouter = router({
         AppError.logError(error);
       }
     }),
+  registerUser: publicProcedure
+    .input(
+      z.object({
+        email: emailSchema,
+        password: passwordSchema,
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const { email, password } = input;
+
+      try {
+        const user = await authService.registerUser(email, password);
+
+        return user;
+      } catch (error) {
+        AppError.logError(error);
+      }
+    }),
 });

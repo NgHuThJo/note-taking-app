@@ -10,6 +10,10 @@ export function FormErrorMessage({ error }: ErrorProps) {
   return typeof error === "string" ? (
     <p className={styles.error}>{error}</p>
   ) : (
-    error?.map((message) => <p className={styles.error}>{message}</p>)
+    error?.map((message, index) => (
+      <p className={styles.error} key={index}>
+        {message}
+      </p>
+    ))
   );
 }

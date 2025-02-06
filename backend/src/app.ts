@@ -32,7 +32,7 @@ app.use(
     store: redisStore,
     resave: false,
     saveUninitialized: false,
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET!,
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

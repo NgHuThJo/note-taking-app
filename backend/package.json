@@ -5,23 +5,18 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "npm run prisma:generate && npm run prisma:deploy && tsc",
+    "build": "npm run drizzle:generate && tsc",
     "start": "node --conditions=production dist/src/app.js",
     "dev": "tsx --watch --env-file=.env ./src/app.ts",
-    "prisma": "npx prisma migrate dev",
-    "prisma:deploy": "npx prisma migrate deploy",
-    "prisma:seed": "npx prisma db seed",
-    "prisma:generate": "npx prisma generate",
-    "prisma:reset": "npx prisma migrate reset"
+    "drizzle:generate": "drizzle-kit generate",
+    "drizzle:migrate": "drizzle-kit migrate",
+    "drizzle:push": "drizzle-kit push"
   },
   "imports": {
     "#backend/*": {
       "production": "./dist/src/*",
       "default": "./src/*"
     }
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -30,8 +25,10 @@
     "@trpc/server": "^11.0.0-rc.730",
     "connect-redis": "^8.0.1",
     "cors": "^2.8.5",
+    "drizzle-orm": "^0.39.1",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
+    "pg": "^8.13.1",
     "redis": "^4.7.0"
   },
   "devDependencies": {
@@ -39,6 +36,8 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.1",
+    "@types/pg": "^8.11.11",
+    "drizzle-kit": "^0.30.4",
     "tsx": "^4.19.2"
   }
 }

@@ -1,22 +1,20 @@
 import { useState, FormEvent } from "react";
-import { trpc } from "#frontend/lib/trpc";
+import { Link } from "react-router";
 import { Button } from "#frontend/components/ui/button/button";
-import { FormError } from "#frontend/components/ui/form/message/error";
+import { FormErrorMessage } from "#frontend/components/ui/form/message/error";
 import { Logo } from "#frontend/components/ui/image/icon/icon";
-import { loginSchema, SchemaError } from "#shared/types/frontend-zod";
+import { trpc } from "#frontend/lib/trpc";
+import { SchemaError } from "#frontend/types/zod";
+import { loginSchema } from "#shared/types/auth";
 
-export function Login() {
+export function Registration() {
   const [fieldErrors, setFieldErrors] = useState<
     SchemaError<typeof loginSchema>
   >({});
-  const { mutate, isPending, error } = trpc.auth.loginUser.useMutation();
+  const { mutate, isPending, error } = trpc.auth.registerUser.useMutation();
 
   if (isPending) {
     return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>{error.message}</p>;
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -46,9 +44,8 @@ export function Login() {
         <Logo />
         <p>Notes</p>
       </div>
-      <h1>Welcome to Note</h1>
-      <h1>hello world</h1>
-      <p>Please log in to continue</p>
+      <h1>Create Your Account</h1>
+      <p>Sign up to start organizing your notes and boost your productivity.</p>
       <form method="post" onSubmit={handleSubmit}>
         <label htmlFor="email">
           Email address
@@ -58,7 +55,7 @@ export function Login() {
             id="email"
             placeholder="email@example.com"
           />
-          {fieldErrors?.email && <FormError message={fieldErrors.email} />}
+          {fieldErrors?.email && <FormErrorMessage error={fieldErrors.email} />}
         </label>
         <label htmlFor="password">
           Password
@@ -68,10 +65,16 @@ export function Login() {
             id="password"
             placeholder="Enter your password"
           />
+          {fieldErrors?.password && (
+            <FormErrorMessage error={fieldErrors?.password} />
+          )}
         </label>
-        <Button type="submit">Login</Button>
+        <Button type="submit">Sign up</Button>
+        {error && <p>{error.message}</p>}
       </form>
-      <p></p>
+      <p>
+        Already have an account? <Link to="/">Login</Link>
+      </p>
     </div>
   );
 }

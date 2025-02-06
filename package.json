@@ -12,7 +12,10 @@
     "server": "cd backend & npm run dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "d": "docker compose up -d",
+    "docker:delete": "docker compose down -f docker-compose.yml",
+    "docker:build": "docker compose build"
   },
   "workspaces": [
     "./*"

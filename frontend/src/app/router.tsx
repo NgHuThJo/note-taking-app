@@ -1,7 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { ErrorRoute } from "#frontend/app/routes/error";
 import { NotFoundRoute } from "#frontend/app/routes/not-found";
-import { Login } from "#frontend/features/auth/components/login";
+import { Login } from "#frontend/features/auth/components/login/login";
+import { Registration } from "#frontend/features/auth/components/register/register";
 
 export const routesConfig = [
   {
@@ -10,6 +11,10 @@ export const routesConfig = [
       {
         index: true,
         element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Registration />,
       },
     ],
   },
