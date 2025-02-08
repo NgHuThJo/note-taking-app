@@ -7,5 +7,5 @@ RUN npm i
 COPY . .
 RUN npm i -D typescript
 EXPOSE 4000
-RUN npm run build
+RUN npm run build:backend
 CMD ["npm", "start"]
