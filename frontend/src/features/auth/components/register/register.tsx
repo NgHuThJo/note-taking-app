@@ -1,4 +1,5 @@
 import { useState, FormEvent } from "react";
+import { useNavigate } from "react-router";
 import { Link } from "react-router";
 import { Button } from "#frontend/components/ui/button/button";
 import { FormErrorMessage } from "#frontend/components/ui/form/message/error";
@@ -11,6 +12,7 @@ export function Registration() {
   const [fieldErrors, setFieldErrors] = useState<
     SchemaError<typeof loginSchema>
   >({});
+  const navigate = useNavigate();
   const { mutate, isPending, error } = trpc.auth.registerUser.useMutation();
 
   if (isPending) {
@@ -31,6 +33,7 @@ export function Registration() {
     mutate(parsedSchema.data, {
       onSuccess: () => {
         setFieldErrors({});
+        return navigate("/");
       },
       onError: (error) => {
         console.error(error.message);

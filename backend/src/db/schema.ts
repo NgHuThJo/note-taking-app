@@ -21,13 +21,16 @@ export const userTable = pgTable("users", {
 
 export const noteTable = pgTable("notes", {
   id: serial().primaryKey(),
-  authorId: integer().references(() => userTable.id, { onDelete: "cascade" }),
+  authorId: integer("author_id")
+    .references(() => userTable.id, { onDelete: "cascade" })
+    .notNull(),
   title: varchar({ length: 255 }).notNull(),
   content: text().notNull(),
-  updatedAt: timestamp()
+  updatedAt: timestamp("updated_at")
     .defaultNow()
-    .$onUpdate(() => sql`NOW()`),
-  status: statusEnum().default("active"),
+    .$onUpdate(() => sql`NOW()`)
+    .notNull(),
+  status: statusEnum().default("active").notNull(),
 });
 
 export const tagTable = pgTable("tags", {
@@ -38,10 +41,10 @@ export const tagTable = pgTable("tags", {
 export const noteToTagTable = pgTable(
   "notes_to_tags",
   {
-    noteId: integer()
+    noteId: integer("note_id")
       .references(() => noteTable.id, { onDelete: "cascade" })
       .notNull(),
-    tagId: integer()
+    tagId: integer("tag_id")
       .references(() => tagTable.id, { onDelete: "cascade" })
       .notNull(),
   },

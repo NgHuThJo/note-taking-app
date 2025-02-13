@@ -44,7 +44,9 @@ class AuthService {
       .values({ email, password })
       .returning();
 
-    return newUser;
+    const { password: _userPassword, ...userData } = newUser;
+
+    return userData;
   }
 }
 

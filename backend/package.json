@@ -5,8 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "npm run drizzle:generate && tsc",
-    "start": "node --conditions=production dist/src/app.js",
+    "build": "&& tsc",
+    "start": "npm run drizzle:push && node --conditions=production dist/src/app.js",
     "dev": "tsx --watch --env-file=.env ./src/app.ts",
     "drizzle:generate": "drizzle-kit generate",
     "drizzle:migrate": "drizzle-kit migrate",

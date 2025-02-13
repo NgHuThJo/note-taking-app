@@ -1,6 +1,7 @@
 import { createRoutesStub } from "react-router";
 import { screen, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { Home } from "#frontend/features/home/components/home";
 import { Login } from "#frontend/features/auth/components/login/login";
 import { createTestTRPCandQueryClients } from "#frontend/test/mocks/react-query";
 
@@ -12,6 +13,10 @@ describe("login", () => {
     {
       path: "/",
       Component: Login,
+    },
+    {
+      path: "/home",
+      Component: Home,
     },
   ];
 
@@ -44,7 +49,7 @@ describe("login", () => {
 
     await user.click(submitButton);
 
-    expect(screen.getByText(/invalid email address/i));
-    expect(screen.getByText(/wrong password/i));
+    expect(screen.getByText(/email address is invalid/i));
+    expect(screen.getByText(/password must have at least 8 characters/i));
   });
 });

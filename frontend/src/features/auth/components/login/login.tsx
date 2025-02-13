@@ -1,5 +1,5 @@
 import { useState, FormEvent } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { trpc } from "#frontend/lib/trpc";
 import { Button } from "#frontend/components/ui/button/button";
 import { FormErrorMessage } from "#frontend/components/ui/form/message/error";
@@ -11,13 +11,14 @@ export function Login() {
   const [fieldErrors, setFieldErrors] = useState<
     SchemaError<typeof loginSchema>
   >({});
+  const navigate = useNavigate();
   const { mutate, isPending, error } = trpc.auth.loginUser.useMutation();
 
   if (isPending) {
     return <p>Loading...</p>;
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleLogin = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = Object.fromEntries(new FormData(event.currentTarget));
@@ -31,6 +32,7 @@ export function Login() {
     mutate(parsedSchema.data, {
       onSuccess: () => {
         setFieldErrors({});
+        return navigate("/home");
       },
       onError: (error) => {
         console.error(error.message);
@@ -45,8 +47,8 @@ export function Login() {
         <p>Notes</p>
       </div>
       <h1>Welcome to Note</h1>
-      <p>Please log in to continue</p>
-      <form method="post" onSubmit={handleSubmit}>
+      <p>Please log in to continue.</p>
+      <form method="post" onSubmit={handleLogin}>
         <label htmlFor="email">
           Email address
           <input

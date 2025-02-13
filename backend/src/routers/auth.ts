@@ -12,11 +12,16 @@ export const authRouter = router({
         password: passwordSchema,
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const { email, password } = input;
+      const { req } = ctx;
 
       try {
         const user = await authService.loginUser(email, password);
+
+        req.session.user = {
+          id: user.id,
+        };
 
         return user;
       } catch (error) {
