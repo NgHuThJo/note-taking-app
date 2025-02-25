@@ -4,6 +4,8 @@ import { NotFoundRoute } from "#frontend/app/routes/not-found";
 import { Home } from "#frontend/features/home/components/home";
 import { Login } from "#frontend/features/auth/components/login/login";
 import { Note } from "#frontend/features/note/components/note";
+import { NoteForm } from "#frontend/features/note/components/form/form";
+import { NoteEditForm } from "#frontend/features/note/components/edit/edit";
 import { Registration } from "#frontend/features/auth/components/register/register";
 
 export const routesConfig = [
@@ -25,6 +27,14 @@ export const routesConfig = [
           {
             index: true,
             element: <Note />,
+          },
+          {
+            path: "create-note",
+            element: <NoteForm />,
+          },
+          {
+            path: ":id",
+            element: <NoteEditForm />,
           },
         ],
       },

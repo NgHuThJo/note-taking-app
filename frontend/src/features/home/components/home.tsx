@@ -3,7 +3,7 @@ import { Logo } from "#frontend/components/ui/image/icon/icon";
 
 const navList = [
   {
-    path: "/",
+    path: "/home",
     label: "Home",
   },
   {

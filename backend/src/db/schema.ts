@@ -35,7 +35,7 @@ export const noteTable = pgTable("notes", {
 
 export const tagTable = pgTable("tags", {
   id: serial().primaryKey(),
-  tag: varchar({ length: 255 }).notNull(),
+  tag: varchar({ length: 255 }).notNull().unique(),
 });
 
 export const noteToTagTable = pgTable(
