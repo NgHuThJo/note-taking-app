@@ -32,7 +32,7 @@ export function Login() {
     mutate(parsedSchema.data, {
       onSuccess: () => {
         setFieldErrors({});
-        return navigate("/home");
+        return navigate("/home/all-notes");
       },
       onError: (error) => {
         console.error(error.message);
@@ -77,7 +77,7 @@ export function Login() {
         {error && <p>{error.message}</p>}
       </form>
       <p>
-        No account yet? <Link to="register">Sign Up</Link>
+        No account yet? <Link to="/register">Sign Up</Link>
       </p>
     </div>
   );

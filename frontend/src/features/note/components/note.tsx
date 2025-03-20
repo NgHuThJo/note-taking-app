@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, Outlet } from "react-router";
 import { trpc } from "#frontend/lib/trpc";
 
 export function Note() {
@@ -37,7 +37,8 @@ export function Note() {
           </p>
         )}
       </div>
-      <Link to="create-note">+</Link>
+      <Link to="create">+</Link>
+      <Outlet />
     </div>
   );
 }

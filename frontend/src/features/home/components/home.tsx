@@ -3,23 +3,23 @@ import { Logo } from "#frontend/components/ui/image/icon/icon";
 
 const navList = [
   {
-    path: "/home",
+    path: "all-notes",
     label: "Home",
   },
   {
-    path: "/search",
+    path: "search",
     label: "Search",
   },
   {
-    path: "/archive",
+    path: "archived-notes",
     label: "Archive",
   },
   {
-    path: "/tags",
+    path: "tags",
     label: "Tags",
   },
   {
-    path: "/settings",
+    path: "settings",
     label: "Settings",
   },
 ];

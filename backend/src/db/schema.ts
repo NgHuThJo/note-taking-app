@@ -1,6 +1,5 @@
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import {
-  check,
   integer,
   serial,
   pgTable,
@@ -9,9 +8,11 @@ import {
   primaryKey,
   pgEnum,
   text,
+  pgView,
 } from "drizzle-orm/pg-core";
 
 export const statusEnum = pgEnum("note_status", ["active", "archived"]);
+export const themeEnum = pgEnum("theme", ["light", "dark"]);
 
 export const userTable = pgTable("users", {
   id: serial().primaryKey(),
@@ -28,7 +29,7 @@ export const noteTable = pgTable("notes", {
   content: text().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
-    .$onUpdate(() => sql`NOW()`)
+    .$onUpdate(() => new Date())
     .notNull(),
   status: statusEnum().default("active").notNull(),
 });
@@ -55,18 +56,34 @@ export const noteToTagTable = pgTable(
   ],
 );
 
-export const optionTable = pgTable(
-  "options",
-  {
-    id: serial().primaryKey(),
-    theme: varchar({ length: 6 }).notNull(),
-  },
-  (table) => [
-    {
-      checkConstraint: check(
-        "theme_check",
-        sql`${table.theme} ~ '^([0-9a-fA-F]{2}){3}$'`,
+export const optionTable = pgTable("options", {
+  id: serial().primaryKey(),
+  userId: integer("user_id")
+    .references(() => userTable.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
+  theme: themeEnum().default("light").notNull(),
+});
+
+// Views
+export const noteView = pgView("note_view").as((qb) =>
+  qb
+    .select({
+      id: noteTable.id,
+      authorId: noteTable.authorId,
+      title: noteTable.title,
+      content: noteTable.content,
+      updatedAt: noteTable.updatedAt,
+      status: noteTable.status,
+      tags: sql<
+        string[]
+      >`COALESCE(jsonb_agg(${tagTable.tag}) FILTER (WHERE ${tagTable.id} IS NOT NULL), '[]')`.as(
+        "tags",
       ),
-    },
-  ],
+    })
+    .from(noteTable)
+    .leftJoin(noteToTagTable, eq(noteToTagTable.noteId, noteTable.id))
+    .leftJoin(tagTable, eq(noteToTagTable.tagId, tagTable.id))
+    .groupBy(noteTable.id),
 );

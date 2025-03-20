@@ -1,25 +1,25 @@
-import { eq, sql } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "#backend/db/index.js";
 import { noteTable, noteToTagTable, tagTable } from "#backend/db/schema.js";
+import { noteView } from "#backend/db/schema.js";
 
 class NoteService {
   async getAllNotes({ authorId }: { authorId: number }) {
     const notes = await db
-      .select({
-        id: noteTable.id,
-        title: noteTable.title,
-        content: noteTable.content,
-        updatedAt: noteTable.updatedAt,
-        status: noteTable.status,
-        tags: sql<
-          string[]
-        >`COALESCE(jsonb_agg(${tagTable.tag}) FILTER (WHERE ${tagTable.id} IS NOT NULL), '[]')`,
-      })
-      .from(noteTable)
-      .leftJoin(noteToTagTable, eq(noteToTagTable.noteId, noteTable.id))
-      .leftJoin(tagTable, eq(noteToTagTable.tagId, tagTable.id))
-      .where(eq(noteTable.authorId, authorId))
-      .groupBy(noteTable.id);
+      .select()
+      .from(noteView)
+      .where(eq(noteView.authorId, authorId));
+
+    return notes;
+  }
+
+  async getAllArchivedNotes({ authorId }: { authorId: number }) {
+    const notes = await db
+      .select()
+      .from(noteView)
+      .where(
+        and(eq(noteView.authorId, authorId), eq(noteView.status, "archived")),
+      );
 
     return notes;
   }
@@ -27,8 +27,8 @@ class NoteService {
   async getNote({ noteId }: { noteId: number }) {
     const note = await db
       .select()
-      .from(noteTable)
-      .where(eq(noteTable.id, noteId));
+      .from(noteView)
+      .where(eq(noteView.id, noteId));
 
     return note;
   }
@@ -91,6 +91,26 @@ class NoteService {
       .returning();
 
     return deletedNote;
+  }
+
+  async archiveNote({ noteId }: { noteId: number }) {
+    const [archivedNote] = await db
+      .update(noteTable)
+      .set({ status: "archived" })
+      .where(eq(noteTable.id, noteId))
+      .returning();
+
+    return archivedNote;
+  }
+
+  async restoreNote({ noteId }: { noteId: number }) {
+    const [restoredNote] = await db
+      .update(noteTable)
+      .set({ status: "active" })
+      .where(eq(noteTable.id, noteId))
+      .returning();
+
+    return restoredNote;
   }
 }
 

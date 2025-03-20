@@ -4,6 +4,6 @@
     "customConditions": ["production"],
     "outDir": "dist"
   },
-  "include": ["./src/**/*", "./prisma/**/*"],
+  "include": ["./src/**/*"],
   "references": [{ "path": "../shared" }]
 }

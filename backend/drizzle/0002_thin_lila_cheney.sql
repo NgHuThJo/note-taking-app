@@ -1,0 +1,2 @@
+ALTER TABLE "tags" ADD CONSTRAINT "tags_tag_unique" UNIQUE("tag");--> statement-breakpoint
+CREATE VIEW "public"."note_view" AS (select "notes"."id", "notes"."author_id", "notes"."title", "notes"."content", "notes"."updated_at", "notes"."status", COALESCE(jsonb_agg("tags"."tag") FILTER (WHERE "tags"."id" IS NOT NULL), '[]') as "tags" from "notes" left join "notes_to_tags" on "notes_to_tags"."note_id" = "notes"."id" left join "tags" on "notes_to_tags"."tag_id" = "tags"."id" group by "notes"."id");

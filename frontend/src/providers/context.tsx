@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
-import { WebSocketContextProvider } from "./websocket-context";
+import { ColorThemeContextProvider } from "#frontend/providers/color-theme";
 
 export function Context({ children }: PropsWithChildren) {
-  return <WebSocketContextProvider>{children}</WebSocketContextProvider>;
+  return <ColorThemeContextProvider>{children}</ColorThemeContextProvider>;
 }

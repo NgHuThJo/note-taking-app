@@ -22,12 +22,13 @@ export class AppError extends Error {
 
     if (error instanceof Error) {
       logger.error(`${error.name}:`, error.cause, error.message);
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Unexpected error",
-      });
+    } else {
+      logger.error(`Unknown error: ${error}`);
     }
 
-    logger.error(`Unknown error: ${error}`);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Unexpected error",
+    });
   }
 }

@@ -15,6 +15,13 @@
       "when": 1739434643013,
       "tag": "0001_flimsy_jazinda",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740750813355,
+      "tag": "0002_thin_lila_cheney",
+      "breakpoints": true
     }
   ]
 }

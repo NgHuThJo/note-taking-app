@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
+import { DatabaseError } from "pg";
 import { db } from "#backend/db/index.js";
-import { userTable } from "#backend/db/schema.js";
+import { userTable, optionTable } from "#backend/db/schema.js";
 import { AppError } from "#backend/utils/app-error.js";
 
 class AuthService {
@@ -30,23 +31,31 @@ class AuthService {
   }
 
   async registerUser(email: string, password: string) {
-    const user = await db
-      .select()
-      .from(userTable)
-      .where(eq(userTable.email, email));
+    try {
+      const newUser = await db.transaction(async (tx) => {
+        const [newUser] = await tx
+          .insert(userTable)
+          .values({ email, password })
+          .returning();
 
-    if (user.length > 0) {
-      throw new AppError("CONFLICT", `Email address "${email}" already in use`);
+        await tx.insert(optionTable).values({ userId: newUser.id });
+
+        return newUser;
+      });
+
+      const { password: _userPassword, ...userData } = newUser;
+
+      return userData;
+    } catch (error) {
+      if (error instanceof DatabaseError && error.code === "23505") {
+        throw new AppError(
+          "CONFLICT",
+          `Email address "${email}" already in use`,
+        );
+      }
+
+      throw new AppError("INTERNAL_SERVER_ERROR", "Failed to create user");
     }
-
-    const [newUser] = await db
-      .insert(userTable)
-      .values({ email, password })
-      .returning();
-
-    const { password: _userPassword, ...userData } = newUser;
-
-    return userData;
   }
 }
 

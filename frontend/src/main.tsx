@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
+import { Context } from "#frontend/providers/context";
 import { Router } from "#frontend/app/router";
 import { trpc } from "#frontend/lib/trpc";
 import "#frontend/assets/styles";
@@ -30,7 +31,9 @@ ReactDOM.createRoot(root).render(
   <React.StrictMode>
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <Router />
+        <Context>
+          <Router />
+        </Context>
       </QueryClientProvider>
     </trpc.Provider>
   </React.StrictMode>,

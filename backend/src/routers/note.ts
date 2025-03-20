@@ -35,6 +35,19 @@ export const noteRouter = router({
       AppError.logError(error);
     }
   }),
+  getAllArchivedNotes: protectedProcedure.query(async ({ ctx }) => {
+    try {
+      const { id: authorId } = ctx.req.session.user;
+
+      const allArchivedNotes = await noteService.getAllArchivedNotes({
+        authorId,
+      });
+
+      return allArchivedNotes;
+    } catch (error) {
+      AppError.logError(error);
+    }
+  }),
   createNote: protectedProcedure
     .input(convertedNoteSchema)
     .mutation(async ({ input, ctx }) => {
@@ -79,6 +92,36 @@ export const noteRouter = router({
         const deletedNote = await noteService.deleteNote(input);
 
         return deletedNote;
+      } catch (error) {
+        AppError.logError(error);
+      }
+    }),
+  archiveNote: protectedProcedure
+    .input(
+      z.object({
+        noteId: positiveNumberSchema,
+      }),
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const archivedNote = await noteService.archiveNote(input);
+
+        return archivedNote;
+      } catch (error) {
+        AppError.logError(error);
+      }
+    }),
+  restoreNote: protectedProcedure
+    .input(
+      z.object({
+        noteId: positiveNumberSchema,
+      }),
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const restoredNote = await noteService.restoreNote(input);
+
+        return restoredNote;
       } catch (error) {
         AppError.logError(error);
       }

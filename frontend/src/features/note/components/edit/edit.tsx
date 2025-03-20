@@ -3,18 +3,19 @@ import { Link, useParams } from "react-router";
 import { TextArea } from "#frontend/components/ui/form/textarea/textarea";
 import { trpc } from "#frontend/lib/trpc";
 import { SchemaError } from "#frontend/types/zod";
-import { nonemptyStringSchema } from "#shared/types/zod";
+import { updatedNoteSchema } from "#shared/types/note";
 import { Archive, Bin } from "#frontend/components/ui/image/icon/icon";
 
 export function NoteEditForm() {
+  const utils = trpc.useUtils();
   const [fieldErrors, setFieldErrors] = useState<
-    SchemaError<typeof nonemptyStringSchema>
+    SchemaError<typeof updatedNoteSchema>
   >({});
   const params = useParams<{ id: string }>();
-  const { isSuccess, isPending, error } = trpc.note.getNote.useQuery({
+  const { isPending, error } = trpc.note.getNote.useQuery({
     noteId: Number(params.id),
   });
-  const { mutate } = trpc.note.updateNote.useMutation();
+  const { mutate, isSuccess } = trpc.note.updateNote.useMutation();
 
   if (isPending) {
     return <p>Loading...</p>;
@@ -28,7 +29,12 @@ export function NoteEditForm() {
     event.preventDefault();
 
     const formData = Object.fromEntries(new FormData(event.currentTarget));
-    const parsedData = nonemptyStringSchema.safeParse(formData);
+    const payload = {
+      noteId: Number(params.id),
+      ...formData,
+    };
+    console.log("payload", payload);
+    const parsedData = updatedNoteSchema.safeParse(payload);
 
     if (!parsedData.success) {
       setFieldErrors(parsedData.error.flatten().fieldErrors);
@@ -36,6 +42,9 @@ export function NoteEditForm() {
     }
 
     mutate(parsedData.data, {
+      onSuccess: () => {
+        utils.note.getAllNotes.invalidate();
+      },
       onError: (error) => {
         console.log("backend error:", error.message);
       },

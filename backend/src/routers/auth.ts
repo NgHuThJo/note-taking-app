@@ -1,10 +1,13 @@
 import { z } from "zod";
-import { publicProcedure, router } from "./trpc.js";
+import { protectedProcedure, publicProcedure, router } from "./trpc.js";
 import { authService } from "#backend/services/auth.js";
 import { AppError } from "#backend/utils/app-error.js";
 import { emailSchema, passwordSchema } from "shared/src/types/zod.js";
 
 export const authRouter = router({
+  isAuthenticated: protectedProcedure.query(async () => {
+    return true;
+  }),
   loginUser: publicProcedure
     .input(
       z.object({

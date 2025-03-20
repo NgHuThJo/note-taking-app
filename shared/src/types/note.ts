@@ -1,5 +1,13 @@
 import { z } from "zod";
-import { nonemptyStringSchema } from "#shared/types/zod.js";
+import {
+  nonemptyStringSchema,
+  positiveNumberSchema,
+} from "#shared/types/zod.js";
+
+export const updatedNoteSchema = z.object({
+  noteId: positiveNumberSchema,
+  content: nonemptyStringSchema,
+});
 
 export const noteSchema = z.object({
   title: nonemptyStringSchema,
